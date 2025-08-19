@@ -11,20 +11,20 @@
   <meta name="theme-color" content="#0ea5e9" />
 
   <!-- ✅ 실제 배포 도메인으로 교체하세요 (SEO용 canonical/og:url) -->
-  <link rel="canonical" href="https://example.com/heic-to-jpg" />
+  <link rel="canonical" href="https://imgheic.com/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="HEIC/HEIF → JPG/PNG (Offline · Client-side)" />
   <meta property="og:description" content="Drag & drop HEIC/HEIF files and convert them to JPG/PNG locally in your browser. No uploads. Batch convert + ZIP download." />
-  <meta property="og:url" content="https://example.com/heic-to-jpg" />
-  <meta property="og:image" content="https://example.com/og-cover.png" />
+  <meta property="og:url" content="https://imgheic.com/" />
+  <meta property="og:image" content="https://imgheic.com/" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="HEIC/HEIF → JPG/PNG (Offline · Client-side)" />
   <meta name="twitter:description" content="Fast, private HEIC/HEIF to JPG/PNG conversion in your browser. Batch convert and ZIP download supported." />
-  <meta name="twitter:image" content="https://example.com/og-cover.png" />
+  <meta name="twitter:image" content="https://imgheic.com/" />
 
   <!-- 구조화 데이터: WebApplication (영문) -->
   <script type="application/ld+json">
@@ -119,7 +119,7 @@
 <body>
   <div class="wrap">
     <header>
-      <h1>HEIC/HEIF → JPG/PNG Converter</h1><a href="./ko/index.html">한국어로 변경</a>
+      <h1>HEIC/HEIF → JPG/PNG Converter</h1><a href="./lan/ko.html">한국어로 변경</a>
       <p class="lead">Everything runs <b>locally</b> in your browser. Convert multiple files at once and download them as a ZIP.</p>
     </header>
 
@@ -142,7 +142,7 @@
         <div id="list" class="list" aria-live="polite"></div>
 
         <footer>
-          <p>🔒 <b>Privacy:</b> Files never leave your device; everything is processed in-memory in your browser.</p>
+          <p> ⚠️ <b>Privacy:</b> Files never leave your device; everything is processed in-memory in your browser.</p>
         </footer>
       </section>
 
@@ -162,21 +162,21 @@
             <input id="quality" type="range" min="0.5" max="1" step="0.01" value="0.92" />
           </div>
 
-          <div class="ad">
+          <!-- <div class="ad"> -->
             <!-- ▶︎ 여기 AdSense 코드 삽입 (예시)
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX" crossorigin="anonymous"></script>
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXX" data-ad-slot="YYYY" data-ad-format="auto" data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             -->
             <!-- Ad slot (replace with AdSense) -->
-          </div>
+          <!-- </div> -->
 
           <details>
             <summary>Help</summary>
             <ul class="muted">
-              <li>All processing is local; nothing is uploaded.</li>
+              <li>All processing is local nothing is uploaded.</li>
               <li>EXIF metadata is typically stripped when re-encoding to JPG/PNG.</li>
-              <li>PNG is lossless; JPG is lossy but you can tune the quality.</li>
+              <li>PNG is lossless JPG is lossy but you can tune the quality.</li>
             </ul>
           </details>
         </div>
