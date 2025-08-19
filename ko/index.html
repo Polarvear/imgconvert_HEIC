@@ -1,32 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <title>HEIC/HEIF to JPG/PNG Converter (Offline · Client-side)</title>
-  <meta name="description" content="Convert HEIC/HEIF images to JPG or PNG entirely in your browser. No uploads, no servers, no database. Batch conversion and ZIP download supported." />
+  <meta name="description" content="브라우저에서만 동작하는 HEIC/HEIF → JPG/PNG 변환기. 배치 변환, ZIP 다운로드. 업로드/서버/DB 없이 100% 클라이언트에서 처리되어 안전합니다." />
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
-  <meta name="keywords" content="HEIC to JPG, HEIC to PNG, HEIF converter, client-side, offline, batch convert, privacy" />
+  <meta name="keywords" content="HEIC to JPG, HEIF to JPG, HEIC to PNG, 이미지 변환, 클라이언트 변환, 오프라인, 배치 변환, 개인정보 보호" />
   <meta name="theme-color" content="#0ea5e9" />
 
-  <!-- ✅ 실제 배포 도메인으로 교체하세요 (SEO용 canonical/og:url) -->
+  <!-- ✅ 실제 배포 도메인으로 교체 -->
   <link rel="canonical" href="https://example.com/heic-to-jpg" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="HEIC/HEIF → JPG/PNG (Offline · Client-side)" />
-  <meta property="og:description" content="Drag & drop HEIC/HEIF files and convert them to JPG/PNG locally in your browser. No uploads. Batch convert + ZIP download." />
+  <meta property="og:title" content="HEIC/HEIF → JPG/PNG (오프라인·클라이언트 변환)" />
+  <meta property="og:description" content="드래그앤드롭으로 HEIC/HEIF 이미지를 JPG/PNG로 일괄 변환하세요. 서버 전송 없이 브라우저에서만 처리합니다." />
   <meta property="og:url" content="https://example.com/heic-to-jpg" />
   <meta property="og:image" content="https://example.com/og-cover.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="HEIC/HEIF → JPG/PNG (Offline · Client-side)" />
-  <meta name="twitter:description" content="Fast, private HEIC/HEIF to JPG/PNG conversion in your browser. Batch convert and ZIP download supported." />
+  <meta name="twitter:title" content="HEIC/HEIF → JPG/PNG (오프라인·클라이언트 변환)" />
+  <meta name="twitter:description" content="HEIC/HEIF 이미지를 JPG/PNG로 안전하게 변환. 배치 변환과 ZIP 다운로드 지원." />
   <meta name="twitter:image" content="https://example.com/og-cover.png" />
 
-  <!-- 구조화 데이터: WebApplication (영문) -->
+  <!-- 구조화 데이터: WebApplication -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -36,33 +36,33 @@
     "applicationCategory": "UtilityApplication",
     "operatingSystem": "All",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "description": "Client-side HEIC/HEIF to JPG/PNG converter. Batch conversion and ZIP download, no uploads or databases."
+    "description": "브라우저에서만 동작하는 HEIC/HEIF → JPG/PNG 변환기. 배치 변환, ZIP 다운로드. DB/업로드 없음."
   }
   </script>
 
-  <!-- 구조화 데이터: FAQ (영문) -->
+  <!-- 구조화 데이터: FAQ -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     "mainEntity": [{
       "@type": "Question",
-      "name": "Are my files uploaded to a server?",
-      "acceptedAnswer": { "@type": "Answer", "text": "No. All conversions happen locally in your browser; nothing is uploaded." }
+      "name": "개인정보가 서버로 업로드되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "아니요. 모든 변환은 브라우저 내부에서만 처리되며 파일은 서버로 업로드되지 않습니다." }
     },{
       "@type": "Question",
-      "name": "Is EXIF metadata preserved?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Generally no. Re-encoding to JPG/PNG via canvas typically strips EXIF metadata." }
+      "name": "EXIF 메타데이터가 유지되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "일반적으로 JPG/PNG로 재인코딩 시 EXIF는 유지되지 않습니다." }
     },{
       "@type": "Question",
-      "name": "Can I convert multiple files at once?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Drag & drop or select multiple HEIC/HEIF files and convert them in a batch." }
+      "name": "한 번에 여러 장을 변환할 수 있나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "네. 여러 HEIC/HEIF 파일을 동시에 드래그앤드롭하거나 선택한 뒤 일괄 변환할 수 있습니다." }
     }]
   }
   </script>
 
   <style>
-    /* ───────────── 기본 라이트 테마(다크 미지원) ───────────── */
+    /* ───────────── 기본 스타일(라이트 전용) ───────────── */
     :root {
       --bg: #ffffff;
       --fg: #0b1324;
@@ -112,53 +112,53 @@
     .err { color: var(--bad); }
     footer { margin-top: 28px; color: var(--muted); font-size: 13px; }
 
-    /* 광고 영역 가이드(실 AdSense 스니펫으로 교체) */
+    /* 광고 영역 가이드(실제 AdSense 스니펫으로 교체) */
     .ad { border:1px dashed var(--border); border-radius:12px; padding:16px; text-align:center; color:var(--muted); background:#fff; }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>HEIC/HEIF → JPG/PNG Converter</h1><a href="./index.html">KO</a>
-      <p class="lead">Everything runs <b>locally</b> in your browser. Convert multiple files at once and download them as a ZIP.</p>
+      <h1>HEIC/HEIF → JPG/PNG 변환기</h1>
+      <p class="lead">서버 업로드 없이 브라우저에서만 변환됩니다. 여러 장도 한 번에 처리하고 ZIP으로 내려받으세요.</p>
     </header>
 
     <div class="grid">
       <!-- 좌측: 드롭존 & 결과 리스트 -->
       <section class="panel">
-        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Drag and drop or pick files">
-          <p style="margin:0 0 12px">Drop your <b>HEIC/HEIF</b> files here</p>
-          <label class="btn" for="fileInput">Choose files</label>
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="파일 드래그앤드롭 또는 선택">
+          <p style="margin:0 0 12px">여기로 <b>HEIC/HEIF</b> 파일을 드롭하세요</p>
+          <label class="btn" for="fileInput">파일 선택</label>
           <input id="fileInput" type="file" accept=".heic,.heif,image/heic,image/heif" multiple />
-          <p class="muted" style="margin-top:10px">Supported: .heic, .heif · Large files OK · EXIF not preserved</p>
+          <p class="muted" style="margin-top:10px">지원: .heic, .heif · 대용량 가능 · EXIF 미보존</p>
         </div>
 
         <div class="actions">
-          <button id="convertBtn" class="primary" disabled>Start conversion</button>
-          <button id="zipBtn" class="ghost" disabled>Download all as ZIP</button>
-          <button id="clearBtn" class="ghost" disabled>Clear list</button>
+          <button id="convertBtn" class="primary" disabled>변환 시작</button>
+          <button id="zipBtn" class="ghost" disabled>전체 ZIP 다운로드</button>
+          <button id="clearBtn" class="ghost" disabled>목록 비우기</button>
         </div>
 
         <div id="list" class="list" aria-live="polite"></div>
 
         <footer>
-          <p>🔒 <b>Privacy:</b> Files never leave your device; everything is processed in-memory in your browser.</p>
+          <p>⚠️ <b>개인정보 보호:</b> 파일은 서버로 전송되지 않으며, 브라우저 메모리에서만 처리됩니다.</p>
         </footer>
       </section>
 
-      <!-- 우측: 옵션 & 광고 자리 -->
+      <!-- 우측: 옵션 & 광고 배너 자리 -->
       <aside class="panel">
         <div class="options">
           <div class="field">
-            <label for="fmt">Output format</label>
-            <select id="fmt" aria-label="Output format">
-              <option value="image/jpeg">JPG (recommended)</option>
+            <label for="fmt">출력 포맷</label>
+            <select id="fmt" aria-label="출력 포맷">
+              <option value="image/jpeg">JPG (권장)</option>
               <option value="image/png">PNG</option>
             </select>
           </div>
 
           <div class="field" id="qualityField">
-            <label for="quality">JPG quality <span id="qVal" class="badge">0.92</span></label>
+            <label for="quality">JPG 품질 <span id="qVal" class="badge">0.92</span></label>
             <input id="quality" type="range" min="0.5" max="1" step="0.01" value="0.92" />
           </div>
 
@@ -168,15 +168,15 @@
             <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXX" data-ad-slot="YYYY" data-ad-format="auto" data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             -->
-            <!-- Ad slot (replace with AdSense) -->
+            <!-- 광고 영역 (AdSense 삽입 위치) -->
           </div>
 
           <details>
-            <summary>Help</summary>
+            <summary>도움말</summary>
             <ul class="muted">
-              <li>All processing is local; nothing is uploaded.</li>
-              <li>EXIF metadata is typically stripped when re-encoding to JPG/PNG.</li>
-              <li>PNG is lossless; JPG is lossy but you can tune the quality.</li>
+              <li>이미지는 브라우저 메모리에서 처리되며 서버로 전송되지 않습니다.</li>
+              <li>EXIF(촬영일시/위치 등) 메타데이터는 변환 시 유지되지 않을 수 있습니다.</li>
+              <li>PNG는 무손실, JPG는 손실 압축(품질 조절 가능)입니다.</li>
             </ul>
           </details>
         </div>
@@ -184,32 +184,32 @@
     </div>
 
     <section style="margin-top: 28px" class="panel">
-      <h2 style="margin:0 0 8px">Why convert HEIC/HEIF?</h2>
+      <h2 style="margin:0 0 8px">HEIC/HEIF 변환이 필요한 이유</h2>
       <p class="muted" style="margin:0">
-        HEIC/HEIF is a high-efficiency format (e.g., used by iPhone). Some apps and services still lack support.
-        This tool converts your images to widely compatible JPG/PNG right in your browser.
+        HEIC/HEIF는 iPhone 등에서 촬영되는 고효율 이미지 포맷입니다. 그러나 일부 서비스/앱에서 미지원인 경우가 많습니다.
+        이 변환기는 추가 프로그램 없이 브라우저에서 JPG/PNG로 손쉽게 바꿔줍니다.
       </p>
     </section>
 
     <section style="margin-top: 16px" class="panel">
-      <h2 style="margin:0 0 8px">FAQ</h2>
-      <details><summary><b>Do you upload my files?</b></summary><p>No. Everything runs locally in your browser.</p></details>
-      <details><summary><b>How to keep maximum quality?</b></summary><p>Choose PNG for lossless, or set JPG quality to 0.90+ to reduce artifacts.</p></details>
-      <details><summary><b>Are large files supported?</b></summary><p>Yes, but processing speed depends on your device memory/CPU.</p></details>
+      <h2 style="margin:0 0 8px">자주 묻는 질문</h2>
+      <details><summary><b>서버로 업로드되나요?</b></summary><p>아니요. 모든 처리는 사용자의 로컬 브라우저에서만 수행됩니다.</p></details>
+      <details><summary><b>품질을 유지하려면?</b></summary><p>PNG는 무손실, JPG는 품질 슬라이더를 0.9 이상으로 설정하면 화질 저하를 줄일 수 있습니다.</p></details>
+      <details><summary><b>대용량 파일도 가능한가요?</b></summary><p>가능합니다. 다만 브라우저 메모리에 의존하므로 기기 성능에 따라 처리 시간이 늘어날 수 있습니다.</p></details>
     </section>
 
     <section style="margin-top: 16px" class="panel">
-      <!-- <div class="ad">Ad slot (article bottom)</div> -->
+      <!-- <div class="ad">광고 영역 (본문 하단 AdSense 배너)</div> -->
     </section>
   </div>
 
-  <!-- heic2any (WebAssembly; CDN 사용 / 필요 시 로컬 호스팅 권장) -->
+  <!-- heic2any (WebAssembly; CDN 사용 / 필요시 로컬 호스팅 권장) -->
   <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
   <!-- JSZip (ZIP 다운로드용) -->
   <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
   <script>
     // =========================
-    // HEIC/HEIF → JPG/PNG 변환기 (영문 UI, 한글 주석)
+    // HEIC/HEIF → JPG/PNG 변환기
     // - 100% 클라이언트 변환 (서버/DB 불필요)
     // - 배치 변환, ZIP 다운로드
     // =========================
@@ -245,10 +245,11 @@
       return base + '.' + newExt;
     }
 
-    /** 유틸: 썸네일 URL */
+    /** 유틸: 미리보기 썸네일 (변환 후/전 모두 사용) */
     function blobToThumbURL(blob){
       const url = URL.createObjectURL(blob);
-      return url; // 썸네일로 계속 사용할 것이므로 해제 생략
+      // 이미지 로드 후 objectURL 해제는 생략 (썸네일로 계속 쓸 거라 유지)
+      return url;
     }
 
     /** UI 갱신 */
@@ -260,7 +261,7 @@
 
         const img = document.createElement('img');
         img.className = 'thumb';
-        img.alt = 'Thumbnail';
+        img.alt = 'thumbnail';
         img.src = item.thumbURL || '';
         row.appendChild(img);
 
@@ -275,13 +276,13 @@
         const note = document.createElement('div');
         note.className = 'note';
         if(item.status === 'done'){
-          note.innerHTML = `<span class="ok">Done</span> • ${(item.outBlob.size/1024).toFixed(1)} KB`;
+          note.innerHTML = `<span class="ok">완료</span> • ${(item.outBlob.size/1024).toFixed(1)} KB`;
         } else if(item.status === 'error'){
-          note.innerHTML = `<span class="err">Failed</span> • ${item.error || 'Unknown error'}`;
+          note.innerHTML = `<span class="err">실패</span> • ${item.error || '알 수 없는 오류'}`;
         } else if(item.status === 'converting'){
-          note.textContent = 'Converting…';
+          note.textContent = '변환 중…';
         } else {
-          note.textContent = 'Queued';
+          note.textContent = '대기 중';
         }
         meta.appendChild(note);
 
@@ -290,7 +291,7 @@
         const actions = document.createElement('div');
         if(item.status === 'done' && item.outBlob){
           const a = document.createElement('a');
-          a.textContent = 'Download';
+          a.textContent = '다운로드';
           a.className = 'ghost';
           a.download = item.outName;
           a.href = URL.createObjectURL(item.outBlob);
@@ -298,7 +299,7 @@
         } else {
           const b = document.createElement('span');
           b.className = 'badge';
-          b.textContent = item.status || 'Queued';
+          b.textContent = item.status || '대기';
           actions.appendChild(b);
         }
         row.appendChild(actions);
@@ -317,13 +318,16 @@
       const allowed = ['heic','heif'];
       for(const f of files){
         const e = ext(f.name);
-        if(!allowed.includes(e)) continue; // HEIC/HEIF 외는 무시
+        if(!allowed.includes(e)){
+          // HEIC/HEIF 가 아니면 건너뜀
+          continue;
+        }
         state.queue.push({
           file: f,
           status: 'queued',
           outBlob: null,
           outName: null,
-          thumbURL: '',
+          thumbURL: '', // 변환 전엔 썸네일 없음
           error: null
         });
       }
@@ -351,7 +355,8 @@
             opts.quality = jpgQuality; // 0~1
           }
 
-          // HEIC → 지정 포맷 Blob
+          // HEIC → 원하는 포맷 Blob
+          // @ts-ignore (전역 heic2any)
           const outBlob = await heic2any(opts);
 
           // 출력 파일명
@@ -374,7 +379,7 @@
           item.error = (err && err.message) ? err.message : String(err);
         }
         renderList();
-        // 다음 파일 처리 전 UI 양보
+        // 다음 파일 처리 전 살짝 양보 (UI 반응성 개선)
         await new Promise(r=>setTimeout(r, 0));
       }
 
@@ -438,11 +443,18 @@
       }
     });
 
-    // 파일 선택(라벨만 사용해 중복 팝업 방지)
-    fileInput.addEventListener('change', ()=>{
+    // 파일 선택 (중복 열림 방지: change 이벤트만 사용)
+    dropzone.addEventListener('click', (e)=>{
+      // 라벨이 트리거하므로 여기서는 별도 처리 불필요
+    });
+    fileInput.addEventListener('click', (e)=> {
+      // 클릭 중복 방지: 기본 동작 유지
+    }, { passive:true });
+    fileInput.addEventListener('change', (e)=>{
       if(fileInput.files && fileInput.files.length){
         addFiles(fileInput.files);
-        fileInput.value = ''; // 동일 파일 재선택 허용
+        // 동일 파일 재선택 허용을 위해 value 초기화
+        fileInput.value = '';
       }
     });
 
@@ -467,10 +479,10 @@
       }
     });
 
-    // 필수 라이브러리 로딩 체크
+    // 오류 핸들링 가이드: heic2any 미로딩 시 안내
     window.addEventListener('load', ()=>{
       if(typeof window.heic2any !== 'function'){
-        alert('Failed to load a required library. Check your network or host heic2any locally.');
+        alert('필수 라이브러리 로딩에 실패했습니다. 네트워크를 확인하거나 heic2any를 로컬로 호스팅하세요.');
       }
     });
   </script>
