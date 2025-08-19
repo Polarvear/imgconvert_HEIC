@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>HEIC/HEIF to JPG/PNG Converter (Offline · Client-side)</title>
+  <meta name="description" content="브라우저에서만 동작하는 HEIC/HEIF → JPG/PNG 변환기. 배치 변환, ZIP 다운로드. 업로드/서버/DB 없이 100% 클라이언트에서 처리되어 안전합니다." />
+  <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+  <meta name="keywords" content="HEIC to JPG, HEIF to JPG, HEIC to PNG, 이미지 변환, 클라이언트 변환, 오프라인, 배치 변환, 개인정보 보호" />
+  <meta name="theme-color" content="#0ea5e9" />
+
+  <!-- ✅ 실제 배포 도메인으로 교체 -->
+  <link rel="canonical" href="https://example.com/heic-to-jpg" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="HEIC/HEIF → JPG/PNG (오프라인·클라이언트 변환)" />
+  <meta property="og:description" content="드래그앤드롭으로 HEIC/HEIF 이미지를 JPG/PNG로 일괄 변환하세요. 서버 전송 없이 브라우저에서만 처리합니다." />
+  <meta property="og:url" content="https://example.com/heic-to-jpg" />
+  <meta property="og:image" content="https://example.com/og-cover.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="HEIC/HEIF → JPG/PNG (오프라인·클라이언트 변환)" />
+  <meta name="twitter:description" content="HEIC/HEIF 이미지를 JPG/PNG로 안전하게 변환. 배치 변환과 ZIP 다운로드 지원." />
+  <meta name="twitter:image" content="https://example.com/og-cover.png" />
+
+  <!-- 구조화 데이터: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "HEIC/HEIF to JPG/PNG Converter",
+    "url": "https://example.com/heic-to-jpg",
+    "applicationCategory": "UtilityApplication",
+    "operatingSystem": "All",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "description": "브라우저에서만 동작하는 HEIC/HEIF → JPG/PNG 변환기. 배치 변환, ZIP 다운로드. DB/업로드 없음."
+  }
+  </script>
+
+  <!-- 구조화 데이터: FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [{
+      "@type": "Question",
+      "name": "개인정보가 서버로 업로드되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "아니요. 모든 변환은 브라우저 내부에서만 처리되며 파일은 서버로 업로드되지 않습니다." }
+    },{
+      "@type": "Question",
+      "name": "EXIF 메타데이터가 유지되나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "일반적으로 JPG/PNG로 재인코딩 시 EXIF는 유지되지 않습니다." }
+    },{
+      "@type": "Question",
+      "name": "한 번에 여러 장을 변환할 수 있나요?",
+      "acceptedAnswer": { "@type": "Answer", "text": "네. 여러 HEIC/HEIF 파일을 동시에 드래그앤드롭하거나 선택한 뒤 일괄 변환할 수 있습니다." }
+    }]
+  }
+  </script>
+
+  <style>
+    /* ───────────── 기본 스타일(라이트 전용) ───────────── */
+    :root {
+      --bg: #ffffff;
+      --fg: #0b1324;
+      --muted: #6b7280;
+      --primary: #0ea5e9;
+      --ring: rgba(14,165,233,0.35);
+      --border: #e5e7eb;
+      --card: #f8fafc;
+      --good: #16a34a;
+      --bad: #dc2626;
+    }
+    html, body { margin:0; padding:0; background:var(--bg); color:var(--fg); font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+    header { text-align:center; margin-bottom: 18px; }
+    h1 { font-size: 28px; margin: 10px 0 6px; }
+    p.lead { color: var(--muted); margin: 0 0 18px; }
+
+    .panel { background: var(--card); border:1px solid var(--border); border-radius: 14px; padding: 16px; }
+    .grid { display:grid; grid-template-columns: 1fr 280px; gap:16px; }
+    @media (max-width: 900px){ .grid { grid-template-columns: 1fr; } }
+
+    .dropzone {
+      border: 2px dashed var(--border); background:#fff; border-radius: 14px; padding: 28px; text-align:center;
+      transition: border-color .2s, background .2s, box-shadow .2s;
+    }
+    .dropzone.dragover { border-color: var(--primary); background:#f0f9ff; box-shadow: 0 0 0 6px var(--ring); }
+    .dropzone input[type=file]{ display:none; }
+    .dropzone .btn { display:inline-block; padding:10px 14px; border-radius:10px; border:1px solid var(--border); background:#fff; cursor:pointer; }
+    .options { display:flex; flex-direction:column; gap:12px; }
+    .field { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#fff; }
+    .field label { font-size:14px; color: var(--muted); }
+    .field input[type=range]{ width: 160px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .actions { display:flex; gap:8px; margin-top: 12px; }
+    .primary { background: var(--primary); color:#fff; border: none; padding: 10px 14px; border-radius: 10px; cursor:pointer; }
+    .ghost { background:#fff; color:var(--fg); border:1px solid var(--border); padding:10px 14px; border-radius:10px; cursor:pointer; }
+    .primary:disabled, .ghost:disabled { opacity:.5; cursor:not-allowed; }
+
+    .list { margin-top:16px; display:grid; gap:10px; }
+    .item { display:grid; grid-template-columns: 72px 1fr auto; gap:12px; align-items:center; border:1px solid var(--border); background:#fff; border-radius:12px; padding:8px; }
+    .thumb { width:72px; height:72px; border-radius:10px; object-fit:cover; border:1px solid var(--border); background:#f1f5f9; }
+    .meta { min-width:0; }
+    .name { font-size:14px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .note { font-size:12px; color:var(--muted); }
+    .badge { font-size:11px; padding:2px 6px; border-radius:999px; border:1px solid var(--border); background:#fff; }
+    .ok { color: var(--good); }
+    .err { color: var(--bad); }
+    footer { margin-top: 28px; color: var(--muted); font-size: 13px; }
+
+    /* 광고 영역 가이드(실제 AdSense 스니펫으로 교체) */
+    .ad { border:1px dashed var(--border); border-radius:12px; padding:16px; text-align:center; color:var(--muted); background:#fff; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>HEIC/HEIF → JPG/PNG 변환기</h1>
+      <p class="lead">서버 업로드 없이 브라우저에서만 변환됩니다. 여러 장도 한 번에 처리하고 ZIP으로 내려받으세요.</p>
+    </header>
+
+    <div class="grid">
+      <!-- 좌측: 드롭존 & 결과 리스트 -->
+      <section class="panel">
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="파일 드래그앤드롭 또는 선택">
+          <p style="margin:0 0 12px">여기로 <b>HEIC/HEIF</b> 파일을 드롭하세요</p>
+          <label class="btn" for="fileInput">파일 선택</label>
+          <input id="fileInput" type="file" accept=".heic,.heif,image/heic,image/heif" multiple />
+          <p class="muted" style="margin-top:10px">지원: .heic, .heif · 대용량 가능 · EXIF 미보존</p>
+        </div>
+
+        <div class="actions">
+          <button id="convertBtn" class="primary" disabled>변환 시작</button>
+          <button id="zipBtn" class="ghost" disabled>전체 ZIP 다운로드</button>
+          <button id="clearBtn" class="ghost" disabled>목록 비우기</button>
+        </div>
+
+        <div id="list" class="list" aria-live="polite"></div>
+
+        <footer>
+          <p>⚠️ <b>개인정보 보호:</b> 파일은 서버로 전송되지 않으며, 브라우저 메모리에서만 처리됩니다.</p>
+        </footer>
+      </section>
+
+      <!-- 우측: 옵션 & 광고 배너 자리 -->
+      <aside class="panel">
+        <div class="options">
+          <div class="field">
+            <label for="fmt">출력 포맷</label>
+            <select id="fmt" aria-label="출력 포맷">
+              <option value="image/jpeg">JPG (권장)</option>
+              <option value="image/png">PNG</option>
+            </select>
+          </div>
+
+          <div class="field" id="qualityField">
+            <label for="quality">JPG 품질 <span id="qVal" class="badge">0.92</span></label>
+            <input id="quality" type="range" min="0.5" max="1" step="0.01" value="0.92" />
+          </div>
+
+          <div class="ad">
+            <!-- ▶︎ 여기 AdSense 코드 삽입 (예시)
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXX" crossorigin="anonymous"></script>
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXX" data-ad-slot="YYYY" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            -->
+            광고 영역 (AdSense 삽입 위치)
+          </div>
+
+          <details>
+            <summary>도움말</summary>
+            <ul class="muted">
+              <li>이미지는 브라우저 메모리에서 처리되며 서버로 전송되지 않습니다.</li>
+              <li>EXIF(촬영일시/위치 등) 메타데이터는 변환 시 유지되지 않을 수 있습니다.</li>
+              <li>PNG는 무손실, JPG는 손실 압축(품질 조절 가능)입니다.</li>
+            </ul>
+          </details>
+        </div>
+      </aside>
+    </div>
+
+    <section style="margin-top: 28px" class="panel">
+      <h2 style="margin:0 0 8px">HEIC/HEIF 변환이 필요한 이유</h2>
+      <p class="muted" style="margin:0">
+        HEIC/HEIF는 iPhone 등에서 촬영되는 고효율 이미지 포맷입니다. 그러나 일부 서비스/앱에서 미지원인 경우가 많습니다.
+        이 변환기는 추가 프로그램 없이 브라우저에서 JPG/PNG로 손쉽게 바꿔줍니다.
+      </p>
+    </section>
+
+    <section style="margin-top: 16px" class="panel">
+      <h2 style="margin:0 0 8px">자주 묻는 질문</h2>
+      <details><summary><b>서버로 업로드되나요?</b></summary><p>아니요. 모든 처리는 사용자의 로컬 브라우저에서만 수행됩니다.</p></details>
+      <details><summary><b>품질을 유지하려면?</b></summary><p>PNG는 무손실, JPG는 품질 슬라이더를 0.9 이상으로 설정하면 화질 저하를 줄일 수 있습니다.</p></details>
+      <details><summary><b>대용량 파일도 가능한가요?</b></summary><p>가능합니다. 다만 브라우저 메모리에 의존하므로 기기 성능에 따라 처리 시간이 늘어날 수 있습니다.</p></details>
+    </section>
+
+    <section style="margin-top: 16px" class="panel">
+      <div class="ad">광고 영역 (본문 하단 AdSense 배너)</div>
+    </section>
+  </div>
+
+  <!-- heic2any (WebAssembly; CDN 사용 / 필요시 로컬 호스팅 권장) -->
+  <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+  <!-- JSZip (ZIP 다운로드용) -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script>
+    // =========================
+    // HEIC/HEIF → JPG/PNG 변환기
+    // - 100% 클라이언트 변환 (서버/DB 불필요)
+    // - 배치 변환, ZIP 다운로드
+    // =========================
+
+    // DOM 참조
+    const dropzone  = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const convertBtn= document.getElementById('convertBtn');
+    const zipBtn    = document.getElementById('zipBtn');
+    const clearBtn  = document.getElementById('clearBtn');
+    const listEl    = document.getElementById('list');
+    const fmtEl     = document.getElementById('fmt');
+    const qualityEl = document.getElementById('quality');
+    const qVal      = document.getElementById('qVal');
+    const qualityField = document.getElementById('qualityField');
+
+    /** 내부 상태 */
+    const state = {
+      queue: [],      // { file, status, outBlob, outName, thumbURL, error }
+      processing: false
+    };
+
+    /** 유틸: 확장자 추출 */
+    function ext(name=''){
+      const i = name.lastIndexOf('.');
+      return i>=0 ? name.slice(i+1).toLowerCase() : '';
+    }
+
+    /** 유틸: 파일명 교체 */
+    function replaceExt(name, newExt){
+      const i = name.lastIndexOf('.');
+      const base = i>=0 ? name.slice(0, i) : name;
+      return base + '.' + newExt;
+    }
+
+    /** 유틸: 미리보기 썸네일 (변환 후/전 모두 사용) */
+    function blobToThumbURL(blob){
+      const url = URL.createObjectURL(blob);
+      // 이미지 로드 후 objectURL 해제는 생략 (썸네일로 계속 쓸 거라 유지)
+      return url;
+    }
+
+    /** UI 갱신 */
+    function renderList(){
+      listEl.innerHTML = '';
+      state.queue.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'item';
+
+        const img = document.createElement('img');
+        img.className = 'thumb';
+        img.alt = 'thumbnail';
+        img.src = item.thumbURL || '';
+        row.appendChild(img);
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+
+        const nm = document.createElement('div');
+        nm.className = 'name';
+        nm.textContent = item.outName || item.file.name;
+        meta.appendChild(nm);
+
+        const note = document.createElement('div');
+        note.className = 'note';
+        if(item.status === 'done'){
+          note.innerHTML = `<span class="ok">완료</span> • ${(item.outBlob.size/1024).toFixed(1)} KB`;
+        } else if(item.status === 'error'){
+          note.innerHTML = `<span class="err">실패</span> • ${item.error || '알 수 없는 오류'}`;
+        } else if(item.status === 'converting'){
+          note.textContent = '변환 중…';
+        } else {
+          note.textContent = '대기 중';
+        }
+        meta.appendChild(note);
+
+        row.appendChild(meta);
+
+        const actions = document.createElement('div');
+        if(item.status === 'done' && item.outBlob){
+          const a = document.createElement('a');
+          a.textContent = '다운로드';
+          a.className = 'ghost';
+          a.download = item.outName;
+          a.href = URL.createObjectURL(item.outBlob);
+          actions.appendChild(a);
+        } else {
+          const b = document.createElement('span');
+          b.className = 'badge';
+          b.textContent = item.status || '대기';
+          actions.appendChild(b);
+        }
+        row.appendChild(actions);
+
+        listEl.appendChild(row);
+      });
+
+      const hasItems = state.queue.length > 0;
+      convertBtn.disabled = !hasItems || state.processing;
+      zipBtn.disabled     = !hasItems || !state.queue.some(x=>x.status==='done' && x.outBlob);
+      clearBtn.disabled   = !hasItems || state.processing;
+    }
+
+    /** 입력된 파일 큐에 추가 */
+    function addFiles(files){
+      const allowed = ['heic','heif'];
+      for(const f of files){
+        const e = ext(f.name);
+        if(!allowed.includes(e)){
+          // HEIC/HEIF 가 아니면 건너뜀
+          continue;
+        }
+        state.queue.push({
+          file: f,
+          status: 'queued',
+          outBlob: null,
+          outName: null,
+          thumbURL: '', // 변환 전엔 썸네일 없음
+          error: null
+        });
+      }
+      renderList();
+    }
+
+    /** 변환 실행(순차 처리로 메모리 사용량 제어) */
+    async function convertAll(){
+      if(state.processing) return;
+      state.processing = true;
+      renderList();
+
+      const toType = fmtEl.value; // 'image/jpeg' 또는 'image/png'
+      const jpgQuality = parseFloat(qualityEl.value);
+
+      for(const item of state.queue){
+        if(item.status === 'done') continue;
+        item.status = 'converting';
+        renderList();
+
+        try{
+          // heic2any 옵션 구성
+          const opts = { blob: item.file, toType };
+          if(toType === 'image/jpeg'){
+            opts.quality = jpgQuality; // 0~1
+          }
+
+          // HEIC → 원하는 포맷 Blob
+          // @ts-ignore (전역 heic2any)
+          const outBlob = await heic2any(opts);
+
+          // 출력 파일명
+          const newExt = (toType === 'image/png') ? 'png' : 'jpg';
+          const outName = replaceExt(item.file.name, newExt);
+
+          // 썸네일 URL
+          const thumbURL = blobToThumbURL(outBlob);
+
+          Object.assign(item, {
+            status: 'done',
+            outBlob,
+            outName,
+            thumbURL,
+            error: null
+          });
+        }catch(err){
+          console.error(err);
+          item.status = 'error';
+          item.error = (err && err.message) ? err.message : String(err);
+        }
+        renderList();
+        // 다음 파일 처리 전 살짝 양보 (UI 반응성 개선)
+        await new Promise(r=>setTimeout(r, 0));
+      }
+
+      state.processing = false;
+      renderList();
+    }
+
+    /** ZIP 다운로드 */
+    async function downloadZip(){
+      const doneItems = state.queue.filter(x=>x.status==='done' && x.outBlob);
+      if(doneItems.length === 0) return;
+
+      const zip = new JSZip();
+      for(const it of doneItems){
+        zip.file(it.outName, it.outBlob);
+      }
+      const blob = await zip.generateAsync({type:'blob'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `converted_${Date.now()}.zip`;
+      a.click();
+    }
+
+    /** 목록 비우기 */
+    function clearList(){
+      if(state.processing) return;
+      state.queue = [];
+      renderList();
+    }
+
+    // 품질 슬라이더
+    qualityEl.addEventListener('input', () => {
+      qVal.textContent = Number(qualityEl.value).toFixed(2);
+    });
+
+    // 포맷 변경 시 JPG 품질 항목 표시/숨김
+    function applyFormatUI(){
+      const isJpg = fmtEl.value === 'image/jpeg';
+      qualityField.style.display = isJpg ? 'flex' : 'none';
+    }
+    fmtEl.addEventListener('change', applyFormatUI);
+    applyFormatUI();
+
+    // 드래그앤드롭
+    ;['dragenter','dragover'].forEach(ev=>{
+      dropzone.addEventListener(ev, e => {
+        e.preventDefault(); e.stopPropagation();
+        dropzone.classList.add('dragover');
+      });
+    });
+    ;['dragleave','drop'].forEach(ev=>{
+      dropzone.addEventListener(ev, e => {
+        e.preventDefault(); e.stopPropagation();
+        dropzone.classList.remove('dragover');
+      });
+    });
+    dropzone.addEventListener('drop', e=>{
+      const dt = e.dataTransfer;
+      if(dt && dt.files && dt.files.length){
+        addFiles(dt.files);
+      }
+    });
+
+    // 파일 선택 (중복 열림 방지: change 이벤트만 사용)
+    dropzone.addEventListener('click', (e)=>{
+      // 라벨이 트리거하므로 여기서는 별도 처리 불필요
+    });
+    fileInput.addEventListener('click', (e)=> {
+      // 클릭 중복 방지: 기본 동작 유지
+    }, { passive:true });
+    fileInput.addEventListener('change', (e)=>{
+      if(fileInput.files && fileInput.files.length){
+        addFiles(fileInput.files);
+        // 동일 파일 재선택 허용을 위해 value 초기화
+        fileInput.value = '';
+      }
+    });
+
+    // 버튼 이벤트
+    convertBtn.addEventListener('click', convertAll);
+    zipBtn.addEventListener('click', downloadZip);
+    clearBtn.addEventListener('click', clearList);
+
+    // 접근성: 키보드로 드롭존 포커스 시 Space/Enter로 파일 선택
+    dropzone.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter' || e.key === ' '){
+        e.preventDefault();
+        document.querySelector('label[for="fileInput"]').click();
+      }
+    });
+
+    // 페이지 이탈 방지(처리 중 경고)
+    window.addEventListener('beforeunload', (e)=>{
+      if(state.processing){
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
+
+    // 오류 핸들링 가이드: heic2any 미로딩 시 안내
+    window.addEventListener('load', ()=>{
+      if(typeof window.heic2any !== 'function'){
+        alert('필수 라이브러리 로딩에 실패했습니다. 네트워크를 확인하거나 heic2any를 로컬로 호스팅하세요.');
+      }
+    });
+  </script>
+</body>
+</html>
